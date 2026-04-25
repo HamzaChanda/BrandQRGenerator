@@ -320,39 +320,78 @@ input[type=color]::-webkit-color-swatch { border: none; border-radius: 6px; }
 }
 .gradient-only.active { opacity: 1; pointer-events: auto; }
 
-.upload-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+.dropzone {
+    position: relative;
     margin-top: 12px;
-}
-
-.upload-row input[type=file] {
-    flex: 1;
-    padding: 8px 10px;
-    color: var(--text);
+    padding: 14px 14px 14px 14px;
     background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    font-size: 12px;
+    border: 1.5px dashed var(--border);
+    border-radius: 11px;
+    transition: border-color 0.15s, background 0.15s;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.upload-row input[type=file]::file-selector-button {
-    background: var(--surface-3);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px 10px;
-    margin-right: 10px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 12px;
-}
-
-.upload-row input[type=file]::file-selector-button:hover {
-    background: var(--accent-soft);
+.dropzone:hover, .dropzone.dragover {
     border-color: var(--accent);
+    background: var(--accent-soft);
+}
+
+.dropzone input[type=file] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.dropzone-inner {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.logo-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: var(--surface-3);
+    object-fit: cover;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.dropzone-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dropzone-text strong {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropzone-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+}
+
+.dropzone #logo-clear {
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
 }
 
 .hidden { display: none; }

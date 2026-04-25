@@ -28,9 +28,11 @@ const els = {
     logoOn: document.getElementById("logo-on"),
     logoSource: document.getElementById("logo-source"),
     logoShape: document.getElementById("logo-shape"),
-    uploadRow: document.getElementById("upload-row"),
+    dropzone: document.getElementById("dropzone"),
     logoFile: document.getElementById("logo-file"),
     logoClear: document.getElementById("logo-clear"),
+    logoThumb: document.getElementById("logo-thumb"),
+    dropzoneTitle: document.getElementById("dropzone-title"),
     logoSize: document.getElementById("logo-size"),
     logoSizeVal: document.getElementById("logo-size-val"),
     logoPad: document.getElementById("logo-pad"),
@@ -312,7 +314,15 @@ function syncLabels() {
     els.logoSizeVal.textContent = els.logoSize.value;
     els.logoPadVal.textContent = els.logoPad.value;
     els.gradientGroup.classList.toggle("active", els.gradient.checked);
-    els.uploadRow.classList.toggle("hidden", els.logoSource.value !== "upload");
+    if (uploadedLogoDataUrl) {
+        els.logoThumb.src = uploadedLogoDataUrl;
+        els.logoThumb.classList.remove("hidden");
+        els.dropzoneTitle.textContent = "Custom logo loaded";
+    } else {
+        els.logoThumb.classList.add("hidden");
+        els.logoThumb.removeAttribute("src");
+        els.dropzoneTitle.textContent = "Drop your logo here";
+    }
 }
 
 function render() {
@@ -447,20 +457,54 @@ document.querySelectorAll(".controls input, .controls select").forEach(el => {
     });
 });
 
-els.logoFile.addEventListener("change", e => {
-    const file = e.target.files && e.target.files[0];
+function handleLogoFile(file) {
     if (!file) return;
+    if (!file.type.startsWith("image/")) {
+        setStatus("Please choose an image file", "err");
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        setStatus("Image too large (max 5 MB)", "err");
+        return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
         uploadedLogoDataUrl = reader.result;
         els.logoSource.value = "upload";
+        els.logoOn.checked = true;
         syncLabels();
         render();
         saveSettings();
-        setStatus("Logo uploaded", "ok");
+        setStatus(`Logo uploaded (${file.name})`, "ok");
     };
     reader.onerror = () => setStatus("Failed to read file", "err");
     reader.readAsDataURL(file);
+}
+
+els.logoFile.addEventListener("change", e => {
+    handleLogoFile(e.target.files && e.target.files[0]);
+});
+
+["dragenter", "dragover"].forEach(evt => {
+    els.dropzone.addEventListener(evt, e => {
+        e.preventDefault();
+        e.stopPropagation();
+        els.dropzone.classList.add("dragover");
+    });
+});
+
+["dragleave", "drop"].forEach(evt => {
+    els.dropzone.addEventListener(evt, e => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (evt === "dragleave" && e.target !== els.dropzone) return;
+        els.dropzone.classList.remove("dragover");
+    });
+});
+
+els.dropzone.addEventListener("drop", e => {
+    const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    handleLogoFile(file);
 });
 
 els.logoClear.addEventListener("click", () => {

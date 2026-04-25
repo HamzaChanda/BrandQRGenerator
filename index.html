@@ -195,8 +195,15 @@
                     </div>
                 </div>
 
-                <div id="upload-row" class="upload-row hidden">
+                <div id="dropzone" class="dropzone">
                     <input type="file" id="logo-file" accept="image/*" title="Upload logo image" aria-label="Upload logo image">
+                    <div class="dropzone-inner">
+                        <img id="logo-thumb" class="logo-thumb hidden" alt="Uploaded logo preview">
+                        <div class="dropzone-text">
+                            <strong id="dropzone-title">Drop your logo here</strong>
+                            <span class="dropzone-sub">or click to browse — PNG, JPG, SVG</span>
+                        </div>
+                    </div>
                     <button type="button" id="logo-clear" class="ghost small">Clear</button>
                 </div>
 
