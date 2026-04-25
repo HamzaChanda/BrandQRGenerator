@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preta QR Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <span class="dot"></span>
+            <strong>Preta QR</strong>
+        </div>
+        <div class="topbar-actions">
+            <button type="button" id="reset" class="ghost">Reset</button>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="card preview-card">
+            <div class="card-head">
+                <h1>Live preview</h1>
+                <span id="status" class="status"></span>
+            </div>
+            <div class="preview-frame">
+                <div id="qr-final"></div>
+            </div>
+
+            <div class="download-group">
+                <div class="download-row">
+                    <label for="dl-size">Export size</label>
+                    <select id="dl-size">
+                        <option value="256">256 px</option>
+                        <option value="512" selected>512 px</option>
+                        <option value="1024">1024 px</option>
+                        <option value="2048">2048 px</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button type="button" id="download-svg">SVG</button>
+                    <button type="button" id="download-png" class="secondary">PNG</button>
+                    <button type="button" id="download-jpg" class="secondary">JPG</button>
+                    <button type="button" id="copy-svg" class="ghost">Copy SVG</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="card controls">
+            <div class="card-head">
+                <h1>Options</h1>
+            </div>
+
+            <div class="section">
+                <h3>Content</h3>
+                <label for="preset">Preset</label>
+                <select id="preset">
+                    <option value="classic">Classic</option>
+                    <option value="branded" selected>Branded (Preta)</option>
+                    <option value="midnight">Midnight</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="custom">Custom</option>
+                </select>
+
+                <label for="url">URL / Text</label>
+                <input type="text" id="url" value="https://showcase.pretasystems.com" placeholder="https://example.com">
+
+                <label for="caption">Caption (optional)</label>
+                <input type="text" id="caption" value="" placeholder="Text shown under the QR">
+            </div>
+
+            <div class="section">
+                <h3>Colors</h3>
+                <div class="row">
+                    <div>
+                        <label>Foreground</label>
+                        <div class="color-row">
+                            <input type="color" id="fg" value="#e6e9ee" title="Foreground color" aria-label="Foreground color">
+                            <span id="fg-val" class="mono">#e6e9ee</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Background</label>
+                        <div class="color-row">
+                            <input type="color" id="bg" value="#0d1b2a" title="Background color" aria-label="Background color">
+                            <span id="bg-val" class="mono">#0d1b2a</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label>Finder accent</label>
+                        <div class="color-row">
+                            <input type="color" id="finder" value="#3ad15a" title="Finder accent color" aria-label="Finder accent color">
+                            <span id="finder-val" class="mono">#3ad15a</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Caption color</label>
+                        <div class="color-row">
+                            <input type="color" id="caption-color" value="#e6e9ee" title="Caption color" aria-label="Caption color">
+                            <span id="caption-color-val" class="mono">#e6e9ee</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toggle">
+                    <input type="checkbox" id="transparent">
+                    <label for="transparent">Transparent background</label>
+                </div>
+
+                <div class="toggle">
+                    <input type="checkbox" id="gradient">
+                    <label for="gradient">Use gradient on modules</label>
+                </div>
+
+                <div class="row gradient-only">
+                    <div>
+                        <label>Gradient end</label>
+                        <div class="color-row">
+                            <input type="color" id="grad-end" value="#3ad15a" title="Gradient end" aria-label="Gradient end color">
+                            <span id="grad-end-val" class="mono">#3ad15a</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="grad-angle">Angle: <span id="grad-angle-val" class="mono">135</span>°</label>
+                        <input type="range" id="grad-angle" min="0" max="360" step="15" value="135">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Shape</h3>
+                <div class="row">
+                    <div>
+                        <label for="style">Module style</label>
+                        <select id="style">
+                            <option value="square">Square</option>
+                            <option value="rounded">Rounded</option>
+                            <option value="dots">Dots</option>
+                            <option value="dots-spaced" selected>Dots (spaced)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="finder-style">Finder shape</label>
+                        <select id="finder-style">
+                            <option value="default">Square</option>
+                            <option value="rounded" selected>Rounded</option>
+                            <option value="circle">Circle</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label for="ecl">Error correction</label>
+                        <select id="ecl">
+                            <option value="L">Low (~7%)</option>
+                            <option value="M">Medium (~15%)</option>
+                            <option value="Q">Quartile (~25%)</option>
+                            <option value="H" selected>High (~30%)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="margin">Margin: <span id="margin-val" class="mono">2</span></label>
+                        <input type="range" id="margin" min="0" max="8" step="1" value="2">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Logo</h3>
+                <div class="toggle">
+                    <input type="checkbox" id="logo-on" checked>
+                    <label for="logo-on">Include center logo</label>
+                </div>
+
+                <div class="row">
+                    <div>
+                        <label for="logo-source">Source</label>
+                        <select id="logo-source">
+                            <option value="default" selected>Default (Preta)</option>
+                            <option value="upload">Upload image</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="logo-shape">Logo shape</label>
+                        <select id="logo-shape">
+                            <option value="circle" selected>Circle</option>
+                            <option value="rounded">Rounded</option>
+                            <option value="square">Square</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="upload-row" class="upload-row hidden">
+                    <input type="file" id="logo-file" accept="image/*" title="Upload logo image" aria-label="Upload logo image">
+                    <button type="button" id="logo-clear" class="ghost small">Clear</button>
+                </div>
+
+                <label for="logo-size">Logo size: <span id="logo-size-val" class="mono">22</span>%</label>
+                <input type="range" id="logo-size" min="10" max="35" step="1" value="22">
+
+                <label for="logo-pad">Logo padding: <span id="logo-pad-val" class="mono">8</span>%</label>
+                <input type="range" id="logo-pad" min="0" max="25" step="1" value="8">
+
+                <div class="toggle">
+                    <input type="checkbox" id="logo-bg-on" checked>
+                    <label for="logo-bg-on">Pad behind logo</label>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <small>Tip: serve via a local HTTP server so logo uploads and the default logo load reliably.</small>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
